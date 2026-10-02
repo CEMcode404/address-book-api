@@ -6,9 +6,10 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
+from app import models  # noqa: F401  # Registers ORM models with Base before init_db()
 from app.core.config import settings
-from app.core.logging_config import setup_logging
 from app.core.database import init_db
+from app.core.logging_config import setup_logging
 
 setup_logging(settings.log_level)
 logger = logging.getLogger(__name__)
