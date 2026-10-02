@@ -8,6 +8,7 @@ from fastapi import FastAPI
 
 from app.core.config import settings
 from app.core.logging_config import setup_logging
+from app.core.database import init_db
 
 setup_logging(settings.log_level)
 logger = logging.getLogger(__name__)
@@ -17,6 +18,7 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI) -> AsyncGenerator[None, None]:
     """Run startup and shutdown logic for the application."""
     logger.info("Starting %s v%s", settings.app_name, settings.app_version)
+    init_db()
     yield
     logger.info("Shutting down %s", settings.app_name)
 
