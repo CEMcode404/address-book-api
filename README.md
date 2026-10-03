@@ -20,7 +20,8 @@ uvicorn app.main:app --reload --reload-dir app
 Then open http://127.0.0.1:8000/docs to try the API.
 
 These commands are for macOS/Linux. On Windows, or for a step-by-step explanation,
-see [Getting started](#getting-started).
+see [Getting started](#getting-started). If something fails, see
+[Troubleshooting](#troubleshooting).
 
 ## Features
 
@@ -249,3 +250,27 @@ Validation errors use FastAPI's built-in 422 responses.
 - **Timezone-aware responses.** SQLite doesn't store timezone information, so
   timestamps are returned without a UTC marker.
 - **Docker and CI** to run the tests and linting on every push.
+
+## Troubleshooting
+
+**`pip install` fails with "No matching distribution found"**
+
+Your virtual environment was created with Python older than 3.10. Check with
+`python --version` inside the venv, then recreate it with a newer version:
+
+```bash
+deactivate
+rm -rf venv
+python3.12 -m venv venv && source venv/bin/activate
+pip install -r requirements.txt
+```
+
+**Windows: "running scripts is disabled on this system" when activating the venv**
+
+PowerShell blocks scripts by default. Allow them for the current session, then
+activate again:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+venv\Scripts\Activate.ps1
+```
