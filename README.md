@@ -6,8 +6,8 @@ and search for addresses within a given distance of a location.
 
 ## Quick start
 
-Requires **Python 3.10 or newer**. Check with `python3 --version`; if it's older,
-replace `python3` below with a newer installed version (e.g. `python3.12`).
+Requires **Python 3.12** (check with `python3 --version`). If your default `python3`
+is a different version, replace it below with `python3.12`.
 
 ```bash
 git clone https://github.com/CEMcode404/address-book-api.git
@@ -30,7 +30,7 @@ see [Getting started](#getting-started). If something fails, see
   using accurate geodesic distances
 - **Validation** of all input (coordinate ranges, required fields, text lengths)
 - **Pagination** on list and search endpoints
-- **Structured logging** and consistent JSON error responses
+- **Consistent logging** and JSON error responses
 - **Interactive API docs** via Swagger UI
 - **API integration tests** with an isolated in-memory database
 
@@ -39,7 +39,7 @@ see [Getting started](#getting-started). If something fails, see
 | Purpose            | Library                     |
 | ------------------ | --------------------------- |
 | Web framework      | FastAPI + Uvicorn           |
-| Database / ORM     | SQLite + SQLAlchemy 2.0     |
+| Database / ORM     | SQLite + SQLAlchemy 2.1     |
 | Validation         | Pydantic v2                 |
 | Configuration      | pydantic-settings           |
 | Distance math      | geopy (geodesic distance)   |
@@ -48,8 +48,8 @@ see [Getting started](#getting-started). If something fails, see
 
 ## Requirements
 
-- Python **3.10 or newer** (developed and tested on 3.12). The pinned dependencies
-  are not available for older versions.
+- Python **3.12** (developed and tested on 3.12.15). Other versions are untested;
+  Python 3.9 is known not to work with the pinned dependencies.
 - Git
 
 ## Getting started
@@ -73,9 +73,11 @@ source venv/bin/activate
 Windows (PowerShell):
 
 ```powershell
-python -m venv venv
+py -3.12 -m venv venv
 venv\Scripts\Activate.ps1
 ```
+
+The Windows commands are standard but were not tested; development was done on macOS.
 
 ### 3. Install dependencies
 
@@ -255,8 +257,8 @@ Validation errors use FastAPI's built-in 422 responses.
 
 **`pip install` fails with "No matching distribution found"**
 
-Your virtual environment was created with Python older than 3.10. Check with
-`python --version` inside the venv, then recreate it with a newer version:
+Your virtual environment was created with an older Python version. Check with
+`python --version` inside the venv, then recreate it with Python 3.12:
 
 ```bash
 deactivate
