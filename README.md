@@ -6,6 +6,9 @@ and search for addresses within a given distance of a location.
 
 ## Quick start
 
+Requires **Python 3.10 or newer**. Check with `python3 --version`; if it's older,
+replace `python3` below with a newer installed version (e.g. `python3.12`).
+
 ```bash
 git clone https://github.com/CEMcode404/address-book-api.git
 cd address-book-api
@@ -44,7 +47,8 @@ see [Getting started](#getting-started).
 
 ## Requirements
 
-- Python **3.12** (3.10 or newer is required for the type-hint syntax used)
+- Python **3.10 or newer** (developed and tested on 3.12). The pinned dependencies
+  are not available for older versions.
 - Git
 
 ## Getting started
