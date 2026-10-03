@@ -17,3 +17,7 @@ class AddressRepository:
         self.db.commit()
         self.db.refresh(address)
         return address
+
+    def get(self, address_id: int) -> Address | None:
+        """Return the address with the given ID, or None if it doesn't exist."""
+        return self.db.get(Address, address_id)

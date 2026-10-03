@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from app import models  # noqa: F401  # Registers ORM models with Base before init_db()
 from app.core.config import settings
 from app.core.database import init_db
+from app.core.error_handlers import register_exception_handlers
 from app.core.logging_config import setup_logging
 from app.routers import address
 
@@ -35,10 +36,13 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+register_exception_handlers(app)
+
 
 @app.get("/health", tags=["Health"], summary="Health check")
 def health_check() -> dict[str, str]:
     """Return a simple status to confirm the API is running."""
     return {"status": "ok"}
+
 
 app.include_router(address.router)

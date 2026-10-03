@@ -5,6 +5,7 @@ import logging
 from app.models import Address
 from app.repositories import AddressRepository
 from app.schemas import AddressCreate
+from app.core.exceptions import AddressNotFoundError
 
 logger = logging.getLogger(__name__)
 
@@ -19,4 +20,16 @@ class AddressService:
         """Create and store a new address."""
         address = self.repository.add(Address(**data.model_dump()))
         logger.info("Created address id=%s", address.id)
+        return address
+
+    def get_address(self, address_id: int) -> Address:
+        """Return an address by ID.
+
+        Raises:
+            AddressNotFoundError: If no address has the given ID.
+        """
+        address = self.repository.get(address_id)
+        if address is None:
+            logger.warning("Address not found: id=%s", address_id)
+            raise AddressNotFoundError(address_id)
         return address
