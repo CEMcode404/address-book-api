@@ -284,6 +284,16 @@ Validation errors use FastAPI's built-in 422 responses.
 
 ## Possible improvements
 
+The assignment asks for a minimal API, so the following were intentionally left out
+of scope. They would be the next steps for a production version:
+
+- **Authentication.** Addresses are personal data; a production version should
+  require authentication and give each user their own address book.
+- **Rate limiting** to protect the API from abuse, typically at a reverse proxy or
+  API gateway, or with a library such as slowapi.
+- **CORS configuration** if a browser-based frontend on another origin is added.
+  The assignment requires no GUI, and CORS doesn't apply to Swagger UI (served from
+  the same origin) or to HTTP clients such as curl.
 - **Spatial database.** The nearby search loads all candidates inside the bounding box
   before sorting and paginating, which is fine at this scale. For large datasets,
   SpatiaLite or PostGIS would allow spatial indexing and SQL-side sorting and
@@ -291,8 +301,6 @@ Validation errors use FastAPI's built-in 422 responses.
   complicate setup.
 - **Migrations.** Tables are created with `create_all`, which doesn't alter existing
   tables. Alembic would handle schema changes on existing databases.
-- **Authentication.** Addresses are personal data; a production version should
-  require authentication and give each user their own address book.
 - **Timezone-aware responses.** SQLite doesn't store timezone information, so
   timestamps are returned without a UTC marker.
 - **Docker** for a fully reproducible environment.
