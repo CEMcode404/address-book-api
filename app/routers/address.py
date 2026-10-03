@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models import Address
 from app.repositories import AddressRepository
-from app.schemas import AddressCreate, AddressResponse
+from app.schemas import AddressCreate, AddressResponse, AddressUpdate
 from app.services import AddressService
 
 router = APIRouter(prefix="/addresses", tags=["Addresses"])
@@ -59,3 +59,16 @@ def list_addresses(
 ) -> list[Address]:
     """List addresses, paginated with ``skip`` and ``limit``."""
     return service.list_addresses(skip=skip, limit=limit)
+
+
+@router.patch(
+    "/{address_id}",
+    response_model=AddressResponse,
+    summary="Update an address",
+    responses={status.HTTP_404_NOT_FOUND: {"description": "Address not found"}},
+)
+def update_address(
+    address_id: AddressId, data: AddressUpdate, service: AddressServiceDep
+) -> Address:
+    """Partially update an address. Only the fields provided are changed."""
+    return service.update_address(address_id, data)

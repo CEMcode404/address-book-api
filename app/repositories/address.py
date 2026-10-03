@@ -11,7 +11,7 @@ class AddressRepository:
 
     def __init__(self, db: Session) -> None:
         self.db = db
-        
+
 
     def add(self, address: Address) -> Address:
         """Insert a new address and return it with its generated fields."""
@@ -30,3 +30,10 @@ class AddressRepository:
         """Return a page of addresses ordered by ID."""
         stmt = select(Address).order_by(Address.id).offset(skip).limit(limit)
         return list(self.db.scalars(stmt))
+
+
+    def save(self, address: Address) -> Address:
+        """Persist changes made to an existing address."""
+        self.db.commit()
+        self.db.refresh(address)
+        return address
