@@ -8,7 +8,12 @@ from sqlalchemy.orm import Session
 from app.core.database import get_db
 from app.models import Address
 from app.repositories import AddressRepository
-from app.schemas import AddressCreate, AddressResponse, AddressUpdate
+from app.schemas import (
+    AddressCreate, 
+    AddressResponse, 
+    AddressUpdate, 
+    NearbyAddressResponse,
+)
 from app.services import AddressService
 
 router = APIRouter(prefix="/addresses", tags=["Addresses"])
@@ -35,17 +40,6 @@ def create_address(data: AddressCreate, service: AddressServiceDep) -> Address:
 
 
 @router.get(
-    "/{address_id}",
-    response_model=AddressResponse,
-    summary="Get an address",
-    responses={status.HTTP_404_NOT_FOUND: {"description": "Address not found"}},
-)
-def get_address(address_id: AddressId, service: AddressServiceDep) -> Address:
-    """Retrieve a single address by its ID."""
-    return service.get_address(address_id)
-
-
-@router.get(
     "",
     response_model=list[AddressResponse],
     summary="List addresses",
@@ -59,6 +53,51 @@ def list_addresses(
 ) -> list[Address]:
     """List addresses, paginated with ``skip`` and ``limit``."""
     return service.list_addresses(skip=skip, limit=limit)
+
+
+@router.get(
+    "/nearby",
+    response_model=list[NearbyAddressResponse],
+    summary="Find addresses near a location",
+)
+def find_nearby_addresses(
+    service: AddressServiceDep,
+    latitude: Annotated[
+        float, Query(ge=-90, le=90, description="Latitude of the search center")
+    ],
+    longitude: Annotated[
+        float, Query(ge=-180, le=180, description="Longitude of the search center")
+    ],
+    # 20,000 km is roughly half the Earth's circumference, the farthest any two
+    # points can be apart, so larger values would be meaningless.
+    distance_km: Annotated[
+        float, Query(gt=0, le=20_000, description="Search radius in kilometers")
+    ],
+    skip: Annotated[int, Query(ge=0, description="Number of results to skip")] = 0,
+    limit: Annotated[
+        int, Query(ge=1, le=100, description="Maximum number of results to return")
+    ] = 20,
+) -> list[NearbyAddressResponse]:
+    """Return addresses within ``distance_km`` of a location, nearest first."""
+    results = service.find_nearby(latitude, longitude, distance_km, skip, limit)
+    return [
+        NearbyAddressResponse(
+            **AddressResponse.model_validate(address).model_dump(),
+            distance_km=round(distance, 3),
+        )
+        for address, distance in results
+    ]
+
+
+@router.get(
+    "/{address_id}",
+    response_model=AddressResponse,
+    summary="Get an address",
+    responses={status.HTTP_404_NOT_FOUND: {"description": "Address not found"}},
+)
+def get_address(address_id: AddressId, service: AddressServiceDep) -> Address:
+    """Retrieve a single address by its ID."""
+    return service.get_address(address_id)
 
 
 @router.patch(

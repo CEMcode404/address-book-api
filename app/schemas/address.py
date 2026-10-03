@@ -58,3 +58,9 @@ class AddressResponse(AddressBase):
     id: int
     created_at: datetime
     updated_at: datetime
+
+
+class NearbyAddressResponse(AddressResponse):
+    """An address returned by the nearby search, with its distance from the query point."""
+
+    distance_km: float = Field(description="Distance from the query point in kilometers")
