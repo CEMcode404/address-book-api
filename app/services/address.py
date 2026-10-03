@@ -61,4 +61,15 @@ class AddressService:
         return address
 
 
+    def delete_address(self, address_id: int) -> None:
+        """Delete an address by ID.
+
+        Raises:
+            AddressNotFoundError: If no address has the given ID.
+        """
+        address = self.get_address(address_id)
+        self.repository.delete(address)
+        logger.info("Deleted address id=%s", address_id)
+
+
     

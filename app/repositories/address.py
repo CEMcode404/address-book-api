@@ -37,3 +37,9 @@ class AddressRepository:
         self.db.commit()
         self.db.refresh(address)
         return address
+
+
+    def delete(self, address: Address) -> None:
+        """Remove an address from the database."""
+        self.db.delete(address)
+        self.db.commit()

@@ -72,3 +72,14 @@ def update_address(
 ) -> Address:
     """Partially update an address. Only the fields provided are changed."""
     return service.update_address(address_id, data)
+
+
+@router.delete(
+    "/{address_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+    summary="Delete an address",
+    responses={status.HTTP_404_NOT_FOUND: {"description": "Address not found"}},
+)
+def delete_address(address_id: AddressId, service: AddressServiceDep) -> None:
+    """Delete an address by its ID."""
+    service.delete_address(address_id)
