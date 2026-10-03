@@ -33,3 +33,7 @@ class AddressService:
             logger.warning("Address not found: id=%s", address_id)
             raise AddressNotFoundError(address_id)
         return address
+
+    def list_addresses(self, skip: int = 0, limit: int = 20) -> list[Address]:
+        """Return a page of addresses."""
+        return self.repository.list_all(skip=skip, limit=limit)

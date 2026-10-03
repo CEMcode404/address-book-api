@@ -2,7 +2,7 @@
 
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Path, status
+from fastapi import APIRouter, Depends, Path, Query, status
 from sqlalchemy.orm import Session
 
 from app.core.database import get_db
@@ -43,3 +43,19 @@ def create_address(data: AddressCreate, service: AddressServiceDep) -> Address:
 def get_address(address_id: AddressId, service: AddressServiceDep) -> Address:
     """Retrieve a single address by its ID."""
     return service.get_address(address_id)
+
+
+@router.get(
+    "",
+    response_model=list[AddressResponse],
+    summary="List addresses",
+)
+def list_addresses(
+    service: AddressServiceDep,
+    skip: Annotated[int, Query(ge=0, description="Number of addresses to skip")] = 0,
+    limit: Annotated[
+        int, Query(ge=1, le=100, description="Maximum number of addresses to return")
+    ] = 20,
+) -> list[Address]:
+    """List addresses, paginated with ``skip`` and ``limit``."""
+    return service.list_addresses(skip=skip, limit=limit)

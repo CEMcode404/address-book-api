@@ -3,6 +3,7 @@
 from sqlalchemy.orm import Session
 
 from app.models import Address
+from sqlalchemy import select
 
 
 class AddressRepository:
@@ -10,6 +11,7 @@ class AddressRepository:
 
     def __init__(self, db: Session) -> None:
         self.db = db
+        
 
     def add(self, address: Address) -> Address:
         """Insert a new address and return it with its generated fields."""
@@ -17,7 +19,14 @@ class AddressRepository:
         self.db.commit()
         self.db.refresh(address)
         return address
+    
 
     def get(self, address_id: int) -> Address | None:
         """Return the address with the given ID, or None if it doesn't exist."""
         return self.db.get(Address, address_id)
+    
+
+    def list_all(self, skip: int = 0, limit: int = 20) -> list[Address]:
+        """Return a page of addresses ordered by ID."""
+        stmt = select(Address).order_by(Address.id).offset(skip).limit(limit)
+        return list(self.db.scalars(stmt))
