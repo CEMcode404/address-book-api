@@ -10,3 +10,5 @@ select = [
     "UP",  # modern Python syntax
     "B",   # common bug patterns
 ]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
