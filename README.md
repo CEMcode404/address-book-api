@@ -6,22 +6,27 @@ and search for addresses within a given distance of a location.
 
 ## Quick start
 
-Requires **Python 3.12** (check with `python3 --version`). If your default `python3`
-is a different version, replace it below with `python3.12`.
+Developed and tested with **Python 3.12.15** on macOS.
 
 ```bash
+python3.12 --version
 git clone https://github.com/CEMcode404/address-book-api.git
 cd address-book-api
-python3 -m venv venv && source venv/bin/activate
+python3.12 -m venv venv
+source venv/bin/activate
+python --version
 pip install -r requirements.txt
 uvicorn app.main:app --reload --reload-dir app
 ```
 
 Then open http://127.0.0.1:8000/docs to try the API.
 
+Both version checks should print `Python 3.12` followed by a patch number (tested with
+`Python 3.12.15`). If the first one fails with "command not found", Python 3.12 is not
+installed; if either prints a different version, see [Troubleshooting](#troubleshooting).
+
 These commands are for macOS/Linux. On Windows, or for a step-by-step explanation,
-see [Getting started](#getting-started). If something fails, see
-[Troubleshooting](#troubleshooting).
+see [Getting started](#getting-started).
 
 ## Features
 
@@ -48,26 +53,46 @@ see [Getting started](#getting-started). If something fails, see
 
 ## Requirements
 
-- Python **3.12** (developed and tested on 3.12.15). Other versions are untested;
+- **Python 3.12** (developed and tested with 3.12.15). Other versions are untested;
   Python 3.9 is known not to work with the pinned dependencies.
 - Git
 
 ## Getting started
 
-### 1. Clone the repository
+### 1. Check that Python 3.12 is installed
+
+macOS / Linux:
+
+```bash
+python3.12 --version
+```
+
+Windows (PowerShell):
+
+```powershell
+py -3.12 --version
+```
+
+This should print `Python 3.12` followed by a patch number (tested with
+`Python 3.12.15`). If you get "command not found" or an error, install Python 3.12
+from https://www.python.org/downloads/ (on macOS you can also use
+`brew install python@3.12`), then check again.
+
+### 2. Clone the repository
 
 ```bash
 git clone https://github.com/CEMcode404/address-book-api.git
 cd address-book-api
 ```
 
-### 2. Create and activate a virtual environment
+### 3. Create and activate a virtual environment
 
 macOS / Linux:
 
 ```bash
-python3 -m venv venv
+python3.12 -m venv venv
 source venv/bin/activate
+python --version
 ```
 
 Windows (PowerShell):
@@ -75,17 +100,20 @@ Windows (PowerShell):
 ```powershell
 py -3.12 -m venv venv
 venv\Scripts\Activate.ps1
+python --version
 ```
 
-The Windows commands are standard but were not tested; development was done on macOS.
+`python --version` should again print `Python 3.12`, which confirms the virtual
+environment uses the right version. The Windows commands are standard but were not
+tested; development was done on macOS.
 
-### 3. Install dependencies
+### 4. Install dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run the application
+### 5. Run the application
 
 ```bash
 uvicorn app.main:app --reload --reload-dir app
@@ -93,12 +121,14 @@ uvicorn app.main:app --reload --reload-dir app
 
 The database file (`address_book.db`) and its tables are created automatically on startup.
 
-### 5. Open the API docs
+### 6. Open the API docs
 
 - Swagger UI: http://127.0.0.1:8000/docs
 - ReDoc: http://127.0.0.1:8000/redoc
 
 All endpoints can be tried directly from Swagger UI; example values are pre-filled.
+
+To stop the server, press `Ctrl + C` in the terminal.
 
 ## Configuration
 
@@ -130,6 +160,8 @@ The assignment required create, update, delete, and the nearby search. Get and l
 were added so the API is complete and easy to verify.
 
 ### Examples
+
+With the server running, in a second terminal:
 
 Create an address:
 
@@ -165,6 +197,8 @@ curl -X PATCH http://127.0.0.1:8000/addresses/1 \
 - Search radius (`distance_km`) must be greater than 0 and at most 20,000 km
 
 ## Running the tests
+
+With the virtual environment activated:
 
 ```bash
 pytest -v
@@ -255,24 +289,39 @@ Validation errors use FastAPI's built-in 422 responses.
 
 ## Troubleshooting
 
+**`python3.12: command not found`**
+
+Python 3.12 is not installed. Install it from https://www.python.org/downloads/ or,
+on macOS, with `brew install python@3.12`, then follow the [Quick start](#quick-start).
+
 **`pip install` fails with "No matching distribution found"**
 
-Your virtual environment was created with an older Python version. Check with
-`python --version` inside the venv, then recreate it with Python 3.12:
+The virtual environment was created with a Python version other than 3.12. Delete it,
+recreate it with Python 3.12, then install and run the app. From the project folder:
 
 ```bash
 deactivate
 rm -rf venv
-python3.12 -m venv venv && source venv/bin/activate
+python3.12 -m venv venv
+source venv/bin/activate
+python --version
 pip install -r requirements.txt
+uvicorn app.main:app --reload --reload-dir app
 ```
+
+Then open http://127.0.0.1:8000/docs.
 
 **Windows: "running scripts is disabled on this system" when activating the venv**
 
 PowerShell blocks scripts by default. Allow them for the current session, then
-activate again:
+activate and continue:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 venv\Scripts\Activate.ps1
+python --version
+pip install -r requirements.txt
+uvicorn app.main:app --reload --reload-dir app
 ```
+
+Then open http://127.0.0.1:8000/docs.
