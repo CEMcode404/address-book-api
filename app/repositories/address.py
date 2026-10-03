@@ -45,7 +45,11 @@ class AddressRepository:
         max_lat: float,
         lon_range: tuple[float, float] | None = None,
     ) -> list[Address]:
-        """Return addresses inside a latitude range and, optionally, a longitude range."""
+        """Return addresses inside a latitude range and, if given, a longitude range.
+
+        The longitude range is omitted when the search area can't be described by a
+        single range (near a pole or across the 180° meridian).
+        """
         stmt = select(Address).where(Address.latitude.between(min_lat, max_lat))
         if lon_range is not None:
             stmt = stmt.where(Address.longitude.between(*lon_range))

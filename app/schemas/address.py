@@ -61,6 +61,8 @@ class AddressResponse(AddressBase):
 
 
 class NearbyAddressResponse(AddressResponse):
-    """An address returned by the nearby search, with its distance from the query point."""
+    """A nearby search result, including its distance from the query point."""
 
-    distance_km: float = Field(description="Distance from the query point in kilometers")
+    distance_km: float = Field(
+        description="Distance from the query point in kilometers"
+    )

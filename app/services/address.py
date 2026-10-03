@@ -10,7 +10,6 @@ from app.models import Address
 from app.repositories import AddressRepository
 from app.schemas import AddressCreate, AddressUpdate
 
-
 logger = logging.getLogger(__name__)
 
 # Slightly less than the real length of one degree of latitude (~110.6–111.7 km),
@@ -29,7 +28,7 @@ class AddressService:
         address = self.repository.add(Address(**data.model_dump()))
         logger.info("Created address id=%s", address.id)
         return address
-    
+
     def get_address(self, address_id: int) -> Address:
         """Return an address by ID.
 
@@ -41,7 +40,6 @@ class AddressService:
             logger.warning("Address not found: id=%s", address_id)
             raise AddressNotFoundError(address_id)
         return address
-
 
     def list_addresses(self, skip: int = 0, limit: int = 20) -> list[Address]:
         """Return a page of addresses."""
@@ -122,10 +120,11 @@ class AddressService:
         results.sort(key=lambda item: item[1])
         logger.info(
             "Nearby search at (%s, %s) within %s km: %d of %d candidates matched",
-            latitude, longitude, distance_km, len(results), len(candidates),
-        )   
+            latitude,
+            longitude,
+            distance_km,
+            len(results),
+            len(candidates),
+        )
         # Paginate after sorting, so pages follow nearest-first order.
         return results[skip : skip + limit]
-
-
-    

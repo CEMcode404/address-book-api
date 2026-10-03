@@ -9,9 +9,9 @@ from app.core.database import get_db
 from app.models import Address
 from app.repositories import AddressRepository
 from app.schemas import (
-    AddressCreate, 
-    AddressResponse, 
-    AddressUpdate, 
+    AddressCreate,
+    AddressResponse,
+    AddressUpdate,
     NearbyAddressResponse,
 )
 from app.services import AddressService
