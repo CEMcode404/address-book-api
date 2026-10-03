@@ -1,5 +1,7 @@
 # Address Book API
 
+![Tests](https://github.com/CEMcode404/address-book-api/actions/workflows/tests.yml/badge.svg)
+
 A REST API for managing an address book, built with **FastAPI** and **SQLite**.
 Users can create, read, update, and delete addresses with geographic coordinates,
 and search for addresses within a given distance of a location.
@@ -37,7 +39,8 @@ see [Getting started](#getting-started).
 - **Pagination** on list and search endpoints
 - **Consistent logging** and JSON error responses
 - **Interactive API docs** via Swagger UI
-- **API integration tests** with an isolated in-memory database
+- **API integration tests** with an isolated in-memory database, run on Linux, macOS,
+  and Windows through GitHub Actions
 
 ## Tech stack
 
@@ -50,6 +53,7 @@ see [Getting started](#getting-started).
 | Distance math      | geopy (geodesic distance)   |
 | Testing            | pytest + FastAPI TestClient |
 | Linting/formatting | Ruff                        |
+| CI                 | GitHub Actions              |
 
 ## Requirements
 
@@ -104,8 +108,11 @@ python --version
 ```
 
 `python --version` should again print `Python 3.12`, which confirms the virtual
-environment uses the right version. The Windows commands are standard but were not
-tested; development was done on macOS.
+environment uses the right version.
+
+Development was done on macOS. The project's installation and tests are verified on
+Linux, macOS, and Windows through GitHub Actions; the Windows setup commands above
+were not run manually.
 
 ### 4. Install dependencies
 
@@ -205,7 +212,8 @@ pytest -v
 ```
 
 Tests run against a fresh in-memory SQLite database for each test, so they never
-touch `address_book.db`.
+touch `address_book.db`. They also run automatically on every push, on Linux, macOS,
+and Windows, through GitHub Actions.
 
 ## Development
 
@@ -225,6 +233,8 @@ ruff format .
 ## Project structure
 
 ```
+.github/workflows/
+└── tests.yml                # CI: tests and linting on Linux, macOS, Windows
 app/
 ├── main.py                  # App creation, startup, router registration
 ├── core/
@@ -285,7 +295,7 @@ Validation errors use FastAPI's built-in 422 responses.
   require authentication and give each user their own address book.
 - **Timezone-aware responses.** SQLite doesn't store timezone information, so
   timestamps are returned without a UTC marker.
-- **Docker and CI** to run the tests and linting on every push.
+- **Docker** for a fully reproducible environment.
 
 ## Troubleshooting
 
